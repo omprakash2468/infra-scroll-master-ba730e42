@@ -103,21 +103,36 @@ const ContactSection = () => {
             <Code className="w-5 h-5" />
             <span className="text-[0.7rem] tracking-[3px] uppercase font-bold text-muted-foreground">Web Developers</span>
           </div>
-          <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 px-6">
-            {[
-              "omprakashjakhar@gmail.com", 
-              "parthgupta92006@gmail.com", 
-              "rohitborana777@gmail.com", 
-              "abhirajjain2025@gmail.com"
-            ].map((email) => (
-              <a 
-                key={email}
-                href={`mailto:${email}`}
-                className="text-xs md:text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-300 tracking-wider"
-              >
-                {email}
-              </a>
-            ))}
+          <div className="flex flex-col items-center gap-y-6 px-6">
+            <div className="flex flex-wrap justify-center gap-x-8 gap-y-4">
+              {[
+                "omprakashjakhar@gmail.com", 
+                "parthgupta92006@gmail.com"
+              ].map((email) => (
+                <a 
+                  key={email}
+                  href={`mailto:${email}`}
+                  className="text-xs md:text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-300 tracking-wider"
+                >
+                  {email}
+                </a>
+              ))}
+            </div>
+            <div className="flex flex-wrap justify-center gap-x-8 gap-y-4">
+              {[
+                "rohitborana777@gmail.com", 
+                "abhirajjain2025@gmail.com",
+                "rakshith2932007@gmail.com"
+              ].map((email) => (
+                <a 
+                  key={email}
+                  href={`mailto:${email}`}
+                  className="text-xs md:text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-300 tracking-wider"
+                >
+                  {email}
+                </a>
+              ))}
+            </div>
           </div>
         </motion.div>
 
