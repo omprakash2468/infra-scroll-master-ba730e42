@@ -47,19 +47,12 @@ const ContactSection = () => {
         </section>
 
         {/* Contact Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full mb-12">
           {[
             { icon: MapPin, label: "Head Office", value: "Barmer, Rajasthan", href: "" },
             { icon: Phone, label: "Direct Phone", value: "+91 77428 25259\n+91 91667 88927", href: "tel:+917742825259" },
             { icon: Mail, label: "Business Email", value: "jakharvicky96@gmail.com", href: "mailto:jakharvicky96@gmail.com" },
-            { 
-              icon: Code, 
-              label: "Web Developers", 
-              value: "omprakashjakhar@gmail.com, parthgupta92006@gmail.com, rohitborana777@gmail.com, abhirajjain2025@gmail.com", 
-              href: "mailto:omprakashjakhar@gmail.com,parthgupta92006@gmail.com,rohitborana777@gmail.com,abhirajjain2025@gmail.com" 
-            },
           ].map((item, i) => {
-            const isDeveloper = item.label === "Web Developers";
             const Content = (
               <motion.div
                 key={item.label}
@@ -79,8 +72,8 @@ const ContactSection = () => {
                 <span className="text-muted-foreground text-[0.7rem] tracking-[2px] uppercase mb-4 block font-bold">
                   {item.label}
                 </span>
-                <div className={`font-semibold text-foreground tracking-tight leading-relaxed ${isDeveloper ? 'text-xs md:text-[0.75rem]' : 'text-base'}`}>
-                  {item.value.split(isDeveloper ? ',' : '\n').map((val, idx) => (
+                <div className="font-semibold text-foreground tracking-tight leading-relaxed text-base">
+                  {item.value.split('\n').map((val, idx) => (
                     <span key={idx} className="block">{val.trim()}</span>
                   ))}
                 </div>
@@ -99,7 +92,36 @@ const ContactSection = () => {
           })}
         </div>
 
-        <p className="text-xs text-muted-foreground mt-8">
+        {/* Web Developers Linewise Section */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="w-full border-t border-border/30 pt-12 mt-4 flex flex-col items-center"
+        >
+          <div className="flex items-center gap-3 mb-6 text-primary">
+            <Code className="w-5 h-5" />
+            <span className="text-[0.7rem] tracking-[3px] uppercase font-bold text-muted-foreground">Web Developers</span>
+          </div>
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 px-6">
+            {[
+              "omprakashjakhar@gmail.com", 
+              "parthgupta92006@gmail.com", 
+              "rohitborana777@gmail.com", 
+              "abhirajjain2025@gmail.com"
+            ].map((email) => (
+              <a 
+                key={email}
+                href={`mailto:${email}`}
+                className="text-xs md:text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-300 tracking-wider"
+              >
+                {email}
+              </a>
+            ))}
+          </div>
+        </motion.div>
+
+        <p className="text-xs text-muted-foreground mt-16">
             © 2025 Shree Balaji Construction. All Rights Reserved.
         </p>
 
