@@ -55,8 +55,8 @@ const ContactSection = () => {
             { 
               icon: Code, 
               label: "Web Developers", 
-              value: "omprakashjakhar@gmail.com, parthgupta92006@gmail.com, rohitborana777@gmail.com", 
-              href: "mailto:omprakashjakhar@gmail.com,parthgupta92006@gmail.com,rohitborana777@gmail.com" 
+              value: "omprakashjakhar@gmail.com, parthgupta92006@gmail.com, rohitborana777@gmail.com, abhirajjain2025@gmail.com", 
+              href: "mailto:omprakashjakhar@gmail.com,parthgupta92006@gmail.com,rohitborana777@gmail.com,abhirajjain2025@gmail.com" 
             },
           ].map((item, i) => {
             const isDeveloper = item.label === "Web Developers";
