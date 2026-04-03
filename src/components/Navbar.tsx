@@ -1,25 +1,25 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 
-const navLinks = ["Home", "Projects", "Our Team", "Careers", "Contact"];
+const navLinks = [
+  { name: "Home", path: "/", isHash: false },
+  { name: "We Build", path: "/projects", isHash: false },
+  { name: "Vehicle Hire", path: "/vehicle-hire", isHash: false },
+  { name: "Our Team", path: "/#our-team", isHash: true }
+];
 
 const Logo = () => (
-  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="2" y="18" width="36" height="4" rx="1" fill="hsl(38,92%,50%)" />
-    <rect x="18" y="2" width="4" height="36" rx="1" fill="hsl(217,91%,60%)" />
-    <circle cx="20" cy="20" r="6" stroke="hsl(38,92%,50%)" strokeWidth="2" fill="none" />
-    <circle cx="20" cy="20" r="2" fill="hsl(38,92%,50%)" />
-    <line x1="8" y1="8" x2="14" y2="14" stroke="hsl(220,9%,46%)" strokeWidth="1.5" />
-    <line x1="32" y1="8" x2="26" y2="14" stroke="hsl(220,9%,46%)" strokeWidth="1.5" />
-    <line x1="8" y1="32" x2="14" y2="26" stroke="hsl(220,9%,46%)" strokeWidth="1.5" />
-    <line x1="32" y1="32" x2="26" y2="26" stroke="hsl(220,9%,46%)" strokeWidth="1.5" />
-  </svg>
+  <img src="/logo.png" alt="SB Logo" className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white p-0.5" />
 );
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -27,10 +27,34 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollTo = (id: string) => {
+  const handleNavigation = (link: { name: string, path: string, isHash: boolean }) => {
     setMobileOpen(false);
-    const el = document.getElementById(id.toLowerCase().replace(/\s/g, "-"));
-    el?.scrollIntoView({ behavior: "smooth" });
+    
+    if (link.name === "Home") {
+      if (location.pathname !== "/") {
+        navigate("/");
+        window.scrollTo(0, 0);
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      return;
+    }
+
+    if (link.isHash) {
+      if (location.pathname !== "/") {
+        navigate("/");
+        setTimeout(() => {
+          const el = document.getElementById(link.name.toLowerCase().replace(/\s/g, "-"));
+          el?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      } else {
+        const el = document.getElementById(link.name.toLowerCase().replace(/\s/g, "-"));
+        el?.scrollIntoView({ behavior: "smooth" });
+      }
+    } else {
+      navigate(link.path);
+      window.scrollTo(0, 0);
+    }
   };
 
   return (
@@ -39,54 +63,70 @@ const Navbar = () => {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled
-            ? "bg-background/70 backdrop-blur-xl border-b border-border/50 shadow-lg shadow-background/20"
-            : "bg-transparent"
+        className={`fixed top-0 left-0 right-0 z-50 transition-shadow duration-500 bg-background flex h-20 ${
+          scrolled ? "shadow-md" : ""
         }`}
       >
-        <div className="container mx-auto flex items-center justify-between px-6 py-4">
+        <div className="flex w-full h-full">
+          {/* Left Solid Logo Block */}
           <motion.div
-            className="flex items-center gap-3 cursor-pointer"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            whileHover={{ scale: 1.02 }}
+            className="bg-primary px-4 md:px-8 w-[25%] flex items-center justify-start xl:justify-center cursor-pointer shrink-0"
+            onClick={() => {
+               if(location.pathname !== "/") navigate("/");
+               window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            whileHover={{ backgroundColor: "hsl(var(--primary) / 0.9)" }}
           >
-            <Logo />
-            <div className="hidden sm:block">
-              <span className="font-heading text-xl tracking-wider text-foreground">
-                SHREE BALAJI
-              </span>
-              <span className="block text-[10px] tracking-[0.3em] text-muted-foreground font-body">
-                CONSTRUCTION
-              </span>
+            <div className="flex items-center gap-3">
+              <Logo />
+              <div className="hidden sm:block text-primary-foreground">
+                <span className="font-heading text-xl md:text-2xl tracking-wider block leading-none">
+                  SHREE BALAJI
+                </span>
+                <span className="block text-[10px] tracking-[0.3em] font-body opacity-90 mt-1">
+                  CONSTRUCTION
+                </span>
+              </div>
             </div>
           </motion.div>
 
-          <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link, i) => (
-              <motion.button
-                key={link}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 + i * 0.1 }}
-                onClick={() => scrollTo(link === "Home" ? "hero" : link)}
-                className="text-sm font-body text-muted-foreground hover:text-primary transition-colors duration-300 relative group"
-              >
-                {link}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" />
-              </motion.button>
-            ))}
-          </div>
+          {/* Right Links Block */}
+          <div className="flex-1 flex items-center justify-end px-6 lg:px-12 bg-background border-b border-border/10">
+            <div className="hidden lg:flex items-center gap-12 xl:gap-16">
+              {navLinks.map((link, i) => {
+                const isActive = (location.pathname === link.path && !link.isHash) || 
+                                 (link.name === "Home" && location.pathname === "/" && !location.hash);
+                return (
+                  <motion.button
+                    key={link.name}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 + i * 0.1 }}
+                    onClick={() => handleNavigation(link)}
+                    className={`font-heading text-[1.75rem] xl:text-[2rem] tracking-[2px] transition-colors duration-300 flex items-center gap-2 hover:text-primary ${
+                      isActive ? "text-primary" : "text-foreground"
+                    }`}
+                  >
+                    {link.name}
+                    {/* Down chevron added to match the visual style requested */}
+                    <ChevronDown className="w-5 h-5 opacity-50 mt-1" />
+                  </motion.button>
+                );
+              })}
+            </div>
 
-          <button
-            className="md:hidden text-foreground"
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+            {/* Mobile Menu Button */}
+            <button
+              className="lg:hidden text-foreground ml-auto"
+              onClick={() => setMobileOpen(!mobileOpen)}
+            >
+              {mobileOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
+          </div>
         </div>
       </motion.nav>
 
+      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -94,18 +134,23 @@ const Navbar = () => {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-40 bg-background/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8"
+            className="fixed inset-0 z-40 bg-background/98 backdrop-blur-xl flex flex-col items-center justify-center gap-8"
           >
             {navLinks.map((link, i) => (
               <motion.button
-                key={link}
+                key={link.name}
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.1 }}
-                onClick={() => scrollTo(link === "Home" ? "hero" : link)}
-                className="font-heading text-3xl tracking-wider text-foreground hover:text-primary transition-colors"
+                onClick={() => handleNavigation(link)}
+                className={`font-heading text-3xl tracking-wider transition-colors flex items-center gap-2 ${
+                  (location.pathname === link.path && !link.isHash) || 
+                  (link.name === "Home" && location.pathname === "/" && !location.hash) 
+                    ? "text-primary" 
+                    : "text-foreground hover:text-primary"
+                }`}
               >
-                {link}
+                {link.name}
               </motion.button>
             ))}
           </motion.div>

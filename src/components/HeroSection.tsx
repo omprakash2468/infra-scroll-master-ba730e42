@@ -1,150 +1,118 @@
-import { motion } from "framer-motion";
-import heroBg from "@/assets/hero-bg.jpg";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import img1 from "@/assets/hero-bg.jpg";
+import img2 from "@/assets/hero_background.png";
+import img3 from "@/assets/project-1.jpg";
+import img4 from "@/assets/project-2.jpg";
+import img5 from "@/assets/project-3.jpg";
+import img6 from "@/assets/project-4.jpg";
 
-const headingWords = ["BUILDING", "INDIA'S", "ROADS", "&", "RAILWAYS"];
-
-const RoadSVG = () => (
-  <svg
-    className="absolute bottom-0 left-0 w-full h-20 md:h-32"
-    viewBox="0 0 1440 120"
-    preserveAspectRatio="none"
-  >
-    <motion.path
-      d="M0 100 Q360 60 720 100 Q1080 140 1440 100"
-      stroke="hsl(38,92%,50%)"
-      strokeWidth="3"
-      fill="none"
-      strokeDasharray="20 10"
-      initial={{ strokeDashoffset: 2000 }}
-      animate={{ strokeDashoffset: 0 }}
-      transition={{ duration: 3, ease: "easeInOut", delay: 1.2 }}
-    />
-    <motion.line
-      x1="0" y1="110" x2="1440" y2="110"
-      stroke="hsl(220,9%,46%)"
-      strokeWidth="2"
-      initial={{ pathLength: 0 }}
-      animate={{ pathLength: 1 }}
-      transition={{ duration: 2, ease: "easeInOut", delay: 0.8 }}
-    />
-    <motion.line
-      x1="0" y1="90" x2="1440" y2="90"
-      stroke="hsl(217,91%,60%)"
-      strokeWidth="1.5"
-      strokeDasharray="4 8"
-      initial={{ pathLength: 0 }}
-      animate={{ pathLength: 1 }}
-      transition={{ duration: 2.5, ease: "easeInOut", delay: 1 }}
-    />
-  </svg>
-);
+const images = [img1, img2, img3, img4, img5, img6];
 
 const HeroSection = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, 4000); // Swap every 4 seconds
+    return () => clearInterval(timer);
+  }, []);
+
   return (
-    <section id="hero" className="relative h-screen flex items-center justify-center overflow-hidden grain-overlay">
-      {/* Background image */}
-      <div className="absolute inset-0">
-        <img
-          src={heroBg}
-          alt="Highway construction aerial view"
-          className="w-full h-full object-cover"
-          width={1920}
-          height={1080}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background/90" />
-      </div>
-
-      {/* Dust particles */}
-      <div className="absolute inset-0 pointer-events-none z-[2]">
-        {Array.from({ length: 20 }).map((_, i) => (
+    <section id="hero" className="relative h-screen flex items-center justify-center overflow-hidden bg-black perspective-[2000px]">
+      
+      {/* 3D SPLIT ANIMATION BACKGROUND */}
+      <div className="absolute inset-0 w-full h-full transform-style-3d">
+        <AnimatePresence initial={false}>
           <motion.div
-            key={i}
-            className="absolute w-1 h-1 rounded-full bg-primary/30"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, -30, 0],
-              x: [0, Math.random() * 20 - 10, 0],
-              opacity: [0, 0.6, 0],
-            }}
-            transition={{
-              duration: 3 + Math.random() * 4,
-              repeat: Infinity,
-              delay: Math.random() * 3,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
+            key={currentIndex}
+            className="absolute inset-0 w-full h-full"
+            initial={{ scale: 0.5, opacity: 0, zIndex: 0 }}
+            animate={{ scale: 1, opacity: 1, zIndex: 10 }}
+            exit={{ scale: 1, opacity: 1, zIndex: 20 }}
+            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {/* LEFT HALF (Splits left when exiting) */}
+            <motion.div
+              className="absolute top-0 left-0 w-1/2 h-full overflow-hidden"
+              initial={{ x: 0 }}
+              animate={{ x: 0 }}
+              exit={{ 
+                x: "-100%", 
+                opacity: 0.8,
+                rotateY: 15,
+                transition: { duration: 1.5, ease: [0.76, 0, 0.24, 1] } 
+              }}
+              style={{ transformOrigin: "left center" }}
+            >
+              <img 
+                src={images[currentIndex]} 
+                className="absolute top-0 left-0 w-[200%] h-full object-cover max-w-none" 
+                alt="left half"
+                loading="eager"
+                fetchPriority={currentIndex === 0 ? "high" : "auto"}
+                decoding="async"
+              />
+            </motion.div>
+            
+            {/* RIGHT HALF (Splits right when exiting) */}
+            <motion.div
+              className="absolute top-0 right-0 w-1/2 h-full overflow-hidden"
+              initial={{ x: 0 }}
+              animate={{ x: 0 }}
+              exit={{ 
+                x: "100%", 
+                opacity: 0.8,
+                rotateY: -15,
+                transition: { duration: 1.5, ease: [0.76, 0, 0.24, 1] } 
+              }}
+              style={{ transformOrigin: "right center" }}
+            >
+              <img 
+                src={images[currentIndex]} 
+                className="absolute top-0 right-0 w-[200%] h-full object-cover max-w-none" 
+                alt="right half"
+                loading="eager"
+                fetchPriority={currentIndex === 0 ? "high" : "auto"}
+                decoding="async"
+              />
+            </motion.div>
+          </motion.div>
+        </AnimatePresence>
+        
+        {/* Dark overlay to make text pop */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/30 to-black/90 pointer-events-none z-30" />
       </div>
 
-      {/* Content */}
-      <div className="relative z-[3] text-center px-6 max-w-5xl">
-        <div className="flex flex-wrap justify-center gap-x-4 md:gap-x-6">
-          {headingWords.map((word, i) => (
-            <motion.span
-              key={i}
-              initial={{ opacity: 0, y: 60, rotateX: -40 }}
-              animate={{ opacity: 1, y: 0, rotateX: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 + i * 0.12, ease: "easeOut" }}
-              className="font-heading text-5xl sm:text-7xl md:text-8xl lg:text-9xl tracking-tight text-foreground"
-              style={{
-                color: word === "&" ? "hsl(38,92%,50%)" : undefined,
-                textShadow: "0 4px 30px rgba(0,0,0,0.3)",
-              }}
-            >
-              {word}
-            </motion.span>
-          ))}
-        </div>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2, duration: 0.6 }}
-          className="mt-6 md:mt-8 text-lg md:text-xl text-muted-foreground font-body tracking-wide"
-        >
-          Shree Balaji Construction — Precision. Scale. Legacy.
-        </motion.p>
-
+      {/* Main Text Content */}
+      <div className="absolute right-6 md:right-20 top-1/2 -translate-y-1/2 z-40 text-right max-w-3xl px-4 pointer-events-none">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5, duration: 0.6 }}
-          className="mt-8 flex flex-col sm:flex-row gap-4 justify-center"
+           initial={{ opacity: 0, x: 50 }}
+           animate={{ opacity: 1, x: 0 }}
+           transition={{ duration: 1, delay: 0.5 }}
         >
-          <button
-            onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
-            className="px-8 py-4 bg-primary text-primary-foreground font-heading text-lg tracking-wider rounded-sm hover:scale-105 transition-transform duration-300 shadow-lg shadow-primary/20"
-          >
-            VIEW OUR PROJECTS
-          </button>
-          <button
-            onClick={() => document.getElementById("careers")?.scrollIntoView({ behavior: "smooth" })}
-            className="px-8 py-4 border-2 border-foreground/30 text-foreground font-heading text-lg tracking-wider rounded-sm hover:border-primary hover:text-primary transition-all duration-300"
-          >
-            JOIN OUR TEAM
-          </button>
+          <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-wide text-white drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] leading-tight">
+            WATER COVERS 70%<br />OF EARTH.
+          </h1>
+          <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-[2px] text-primary drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] leading-tight mt-2">
+            REST 30% COVERS<br />BY US.
+          </h1>
         </motion.div>
       </div>
 
-      <RoadSVG />
-
-      {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[3]"
-        animate={{ y: [0, 8, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
-      >
-        <div className="w-6 h-10 border-2 border-foreground/30 rounded-full flex justify-center pt-2">
-          <motion.div
-            className="w-1.5 h-1.5 rounded-full bg-primary"
-            animate={{ y: [0, 12, 0], opacity: [1, 0, 1] }}
-            transition={{ duration: 2, repeat: Infinity }}
+      {/* Pagination dots */}
+      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-40 flex gap-3">
+        {images.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentIndex(i)}
+            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              i === currentIndex ? "bg-primary scale-125 shadow-[0_0_10px_theme(colors.primary.DEFAULT)]" : "bg-white/50 hover:bg-white/80"
+            }`}
           />
-        </div>
-      </motion.div>
+        ))}
+      </div>
     </section>
   );
 };
