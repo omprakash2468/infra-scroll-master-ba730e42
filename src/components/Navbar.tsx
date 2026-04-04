@@ -63,7 +63,7 @@ const Navbar = () => {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-shadow duration-500 bg-background flex h-20 ${
+        className={`fixed top-0 left-0 right-0 z-[100] transition-shadow duration-500 bg-background flex h-20 ${
           scrolled ? "shadow-md" : ""
         }`}
       >
@@ -134,7 +134,7 @@ const Navbar = () => {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-40 bg-background/98 backdrop-blur-xl flex flex-col items-center justify-center gap-8"
+            className="fixed inset-0 z-[90] bg-background/98 backdrop-blur-2xl flex flex-col items-center justify-center gap-10 p-6"
           >
             {navLinks.map((link, i) => (
               <motion.button

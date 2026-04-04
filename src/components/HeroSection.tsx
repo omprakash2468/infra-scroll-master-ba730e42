@@ -86,16 +86,16 @@ const HeroSection = () => {
       </div>
 
       {/* Main Text Content */}
-      <div className="absolute right-6 md:right-20 top-1/2 -translate-y-1/2 z-40 text-right max-w-3xl px-4 pointer-events-none">
+      <div className="absolute right-6 md:right-20 top-1/2 -translate-y-1/2 z-10 text-right max-w-[90%] sm:max-w-3xl px-4 pointer-events-none">
         <motion.div
            initial={{ opacity: 0, x: 50 }}
            animate={{ opacity: 1, x: 0 }}
            transition={{ duration: 1, delay: 0.5 }}
         >
-          <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-wide text-white drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] leading-tight">
+          <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl tracking-wide text-white drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] leading-[1.1]">
             WATER COVERS 70%<br />OF EARTH.
           </h1>
-          <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl tracking-[2px] text-primary drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] leading-tight mt-2">
+          <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl tracking-[1px] md:tracking-[2px] text-primary drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] leading-[1.1] mt-2">
             REST 30% COVERS<br />BY US.
           </h1>
         </motion.div>
